@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 800px;
+                margin: 50px auto;
+                padding: 20px;
+            }
+            #messages {
+                list-style: none;
+                padding: 0;
+                height: 400px;
+                overflow-y: auto;
+                border: 1px solid #ddd;
+                margin-bottom: 20px;
+                padding: 10px;
+            }
+            #messages li {
+                padding: 10px;
+                margin: 5px 0;
+                background: #f0f0f0;
+                border-radius: 5px;
+                word-wrap: break-word;
+            }
+            #messages img {
+                max-width: 300px;
+                max-height: 300px;
+                border-radius: 5px;
+                margin-top: 5px;
+            }
+            .input-container {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+            input[type="text"] {
+                flex: 1;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+            button {
+                padding: 10px 20px;
+                background: #007bff;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            button:hover {
+                background: #0056b3;
+            }
+            #imageInput {
+                display: none;
+            }
+            .image-button {
+                background: #28a745;
+            }
+            .image-button:hover {
+                background: #218838;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>WebSocket Chat</h1>
+        <ul id='messages'></ul>
+
+        <form action="" onsubmit="sendMessage(event)">
+            <div class="input-container">
+                <input type="text" id="messageText" placeholder="Ketik pesan..." autocomplete="off"/>
+                <button type="submit">Send</button>
+                <button type="button" class="image-button" onclick="document.getElementById('imageInput').click()">📷 Image</button>
+            </div>
+        </form>
+
+        <input type="file" id="imageInput" accept="image/*" onchange="sendImage(event)"/>
+
+        <script>
+            var ws = new WebSocket("ws://" + window.location.host + "/ws");
+
+            ws.onmessage = function(event) {
+                var messages = document.getElementById('messages');
+                var message = document.createElement('li');
+
+                try {
+                    // Coba parse sebagai JSON (untuk gambar)
+                    var data = JSON.parse(event.data);
+
+                    if (data.type === 'image') {
+                        var text = document.createTextNode(data.text || 'Mengirim gambar:');
+                        message.appendChild(text);
+                        message.appendChild(document.createElement('br'));
+
+                        var img = document.createElement('img');
+                        img.src = data.image;
+                        message.appendChild(img);
+                    } else if (data.type === 'text') {
+                        var content = document.createTextNode(data.text);
+                        message.appendChild(content);
+                    }
+                } catch (e) {
+                    // Jika bukan JSON, tampilkan sebagai text biasa
+                    var content = document.createTextNode(event.data);
+                    message.appendChild(content);
+                }
+
+                messages.appendChild(message);
+                messages.scrollTop = messages.scrollHeight;
+            };
+
+            ws.onerror = function(error) {
+                console.error('WebSocket Error:', error);
+            };
+
+            ws.onopen = function() {
+                console.log('WebSocket Connected');
+            };
+
+            function sendMessage(event) {
+                event.preventDefault();
+                var input = document.getElementById("messageText");
+
+                if (input.value.trim()) {
+                    var data = JSON.stringify({
+                        type: 'text',
+                        text: input.value
+                    });
+                    ws.send(data);
+                    input.value = '';
+                }
+            }
+
+            function sendImage(event) {
+                var file = event.target.files[0];
+                if (!file) return;
+
+                // Cek ukuran file (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Ukuran gambar terlalu besar! Max 5MB');
+                    return;
+                }
+
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var data = JSON.stringify({
+                        type: 'image',
+                        image: e.target.result,
+                        text: 'Mengirim gambar'
+                    });
+                    ws.send(data);
+                };
+                reader.readAsDataURL(file);
+
+                // Reset input
+                event.target.value = '';
+            }
+        </script>
+    </body>
+</html>
