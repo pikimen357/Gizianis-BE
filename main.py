@@ -2,11 +2,18 @@ from datetime import datetime, timedelta
 from typing import Annotated
 
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, HTTPException, Query, status
+from fastapi import Depends, FastAPI, HTTPException, Query, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 from passlib.context import CryptContext
 from jose import JWTError, jwt
+
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+
+from fastapi_csrf_protect import CsrfProtect
+from config import CsrfSettings
+
 import os
 
 load_dotenv('.env.local')
@@ -92,6 +99,8 @@ def get_session():
 SessionDep = Annotated[Session, Depends(get_session)]
 
 app = FastAPI(title="User Management API")
+
+templates = Jinja2Templates(directory="templates")
 
 
 @app.on_event("startup")
@@ -294,3 +303,11 @@ def delete_user(
     session.delete(user)
     session.commit()
     return {"ok": True, "message": "User berhasil dihapus"}
+
+@app.get("/register-page")
+def register_page(request: Request):
+    return templates.TemplateResponse("auth/register/index.html", {"request": request})
+
+@app.get("/login-page")
+def login_page(request: Request):
+    return templates.TemplateResponse("auth/login/index.html", {"request": request})

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Nutrition Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8e6cf 0%, #88d8b0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 50px 40px;
+            max-width: 720px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .food-images {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .food-bowl {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 56px;
+            color: #2d2d2d;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6b6b6b;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #2d2d2d;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(168, 230, 207, 0.3);
+            border-radius: 20px;
+            padding: 18px 25px;
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper:focus-within {
+            background: rgba(168, 230, 207, 0.5);
+            box-shadow: 0 0 0 3px rgba(168, 230, 207, 0.3);
+        }
+
+        .input-icon {
+            margin-right: 15px;
+            font-size: 24px;
+            color: #4a4a4a;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            flex: 1;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 16px;
+            color: #2d2d2d;
+            font-family: inherit;
+        }
+
+        input::placeholder {
+            color: #8b8b8b;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .forgot-password a {
+            color: #2d2d2d;
+            font-size: 15px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-google {
+            width: 100%;
+            padding: 18px;
+            background: white;
+            color: #2d2d2d;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .btn-google:hover {
+            background: #f5f5f5;
+            border-color: #d0d0d0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .google-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 20px;
+            background: #2d2d2d;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #6b6b6b;
+            font-size: 16px;
+        }
+
+        .register-link a {
+            color: #2d2d2d;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-size: 15px;
+            display: none;
+            border-left: 4px solid #c62828;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-size: 15px;
+            display: none;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 25px;
+            }
+
+            h1 {
+                font-size: 42px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .food-bowl {
+                width: 80px;
+                height: 80px;
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="food-images">
+            <div class="food-bowl">🥗</div>
+            <div class="food-bowl">🍲</div>
+        </div>
+
+        <h1>Login</h1>
+        <p class="subtitle">Log in to track your daily nutrients, manage your meals, and maintain a healthier lifestyle.</p>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">✉️</span>
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔑</span>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                </div>
+            </div>
+
+            <div class="forgot-password">
+                <a href="#" id="forgotPasswordLink">Forgot Password?</a>
+            </div>
+
+            <button type="button" class="btn-google" id="googleLoginBtn">
+                <svg class="google-icon" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Log in with Google
+            </button>
+
+            <button type="submit" class="btn-login">Login</button>
+        </form>
+
+        <div class="register-link">
+            Don't have an account? <a href="/register-page">Register here</a>
+        </div>
+    </div>
+
+    <script>
+        const getBaseUrl = () => {
+            return window.location.origin;
+        };
+
+        const baseUrl = getBaseUrl();
+
+        // Form submission
+        const form = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Collect form data
+            const loginData = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+
+            console.log('Logging in with:', { email: loginData.email }); // Debug (jangan log password!)
+
+            try {
+                const response = await fetch(`${baseUrl}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(loginData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Simpan token ke localStorage
+                    localStorage.setItem('access_token', data.access_token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+
+                    showSuccess('Login successful! Redirecting...');
+
+                    // Redirect ke dashboard setelah 1 detik
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1000);
+                } else {
+                    console.error('Login error:', data);
+                    showError(data.detail || 'Login failed. Please check your credentials.');
+                }
+            } catch (error) {
+                showError('Network error. Please check your connection.');
+                console.error('Error:', error);
+            }
+        });
+
+        // Google login (placeholder)
+        document.getElementById('googleLoginBtn').addEventListener('click', () => {
+            showError('Google login is not yet implemented. Please use email/password.');
+        });
+
+        // Forgot password (placeholder)
+        document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            showError('Password reset feature is not yet implemented.');
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            successMessage.classList.remove('show');
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.classList.add('show');
+            errorMessage.classList.remove('show');
+        }
+
+        // Check if already logged in
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('access_token');
+            if (token) {
+                // Optional: verify token is still valid
+                window.location.href = '/dashboard';
+            }
+        });
+    </script>
+</body>
+</html>
