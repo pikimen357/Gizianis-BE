@@ -110,7 +110,8 @@ app = FastAPI(title="Food Nutrition API with WebSocket")
 # CORS Configuration untuk Next.js
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001"],  # Next.js ports
+    allow_origins=["http://localhost:3000", "http://localhost:3001",
+                   "http://localhost:5500", "http://127.0.0.1:5500"],  # Next.js ports
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
